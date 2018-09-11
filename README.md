@@ -31,8 +31,8 @@ In command prompt
 
 ```
 python create_gatling_scenario_graphs.py -i <location of Gatling Log Files, separated by ,> -o <output location of the Graph HTML Page> -p <percentile>
-
+```
 Eg:
-
 ``` DOS 
 python create_gatling_scenario_graphs.py -i C:\Logs\simulation_log1.log,C:\Logs\simulation_log2 -o C:\Graphs\LoadTest_run1.html -p 99
+```
