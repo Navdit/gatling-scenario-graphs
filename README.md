@@ -4,11 +4,10 @@ A simple python script, which will consume the Gatling Logs to give a html page,
 ## User manual for gatling-scenario-graphs v1.0
 
 ### Table of contents
-- [Quick start example](https://github.com/Navdit/gatling-scenario-graphs#quick-start-example)
+- #Quick Start Example
     
 
 ## Quick Start Example
--------------
 This section shows how to run the python script in quick and easy way.
 
 #### Minimum system requirements to run gatling-scenario-graphs
