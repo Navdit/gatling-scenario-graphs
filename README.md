@@ -36,3 +36,5 @@ Eg:
 ``` DOS 
 python create_gatling_scenario_graphs.py -i C:\Logs\simulation_log1.log,C:\Logs\simulation_log2 -o C:\Graphs\LoadTest_run1.html -p 99
 ```
+
+*Note:* Log Files, should be given without any spaces
