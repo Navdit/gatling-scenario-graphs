@@ -9,6 +9,7 @@
 
 import getopt
 import logging
+import linecache
 import sys
 import time
 from pathlib import Path
@@ -44,8 +45,8 @@ def generate_gatling_log_df(simulation_logs_list):
                                    names=gat_log_col_names, dtype=str)
         gat_log_df = gat_log_df.append(gat_log_df_1)
 
+    # Reset the index of the dataframe
     gat_log_df = gat_log_df.reset_index(drop=True)
-    gat_log_df.to_csv("temp.csv")
 
     # Fill NaN values with default value
     gat_log_df = gat_log_df.fillna("0")
@@ -324,8 +325,10 @@ def get_scenario_metrics(scenario_name, gatling_log_df, right_y_axis_filter, per
 # @param       : Path to be checked
 ########################################################################################################################
 def check_path(input_path):
-    if not input_path.exists():
-        raise Exception("File don't exist. Please check path {}".format(input_path))
+    if input_path.exists() is False:
+        sys.exit("File doesn't exist. Please check path {}".format(input_path))
+    elif str(input_path) in ".":
+        return False
 
 ########################################################################################################################
 
@@ -336,10 +339,25 @@ def check_path(input_path):
 # @param       : List of Log Paths
 ########################################################################################################################
 def check_logs_path(input_logs_list):
+    # Check if location of at least one Simulation Log has been provided.
+    if not input_logs_list:
+        sys.exit("Please provide location of at least one simulation log file as input to argument -i")
+
+    # Split the given log files
     simulation_logs_list = strip_list(input_logs_list.split(','))
+
+    # Loop through the given log files
     for logs in simulation_logs_list:
         file_loc = Path(logs)
-        check_path(file_loc)
+
+        # Save result
+        result = check_path(file_loc)
+
+        # Check if any spaces have been given after the ,
+        if result is False:
+            sys.exit("While giving list of Gatling Log Files, "
+                     "please don't leave any space before or after ','."
+                     "\nCurrent Input looks like - {}".format(input_logs_list))
 
     return simulation_logs_list
 
