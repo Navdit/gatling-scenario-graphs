@@ -9,7 +9,6 @@
 
 import getopt
 import logging
-import linecache
 import sys
 import time
 from pathlib import Path
@@ -258,6 +257,9 @@ def calculate_and_merge_transaction_percentiles(scenario_df, scenario_metrics_df
 
         # Clean the Dataframe from NaN values
         temp_df = temp_df.dropna(how='any')
+
+        # Round the Percentile Column
+        temp_df.TransactionName = temp_df.TransactionName.round(2)
 
         # Refresh the index
         temp_df = temp_df.reset_index(drop=True)
