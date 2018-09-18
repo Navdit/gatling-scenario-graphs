@@ -129,6 +129,13 @@ def compute_right_y_axis(scenario_right_y_axis_df, right_y_axis_filter, granular
         # Fill the last value
         scenario_right_y_axis_temp_df.loc[-1] = [begin_time, right_y_axis_value]
 
+    # Do a Rolling Mean for RPS - to remove the zig-zag Line
+    if right_y_axis_filter in "RPS":
+        scenario_right_y_axis_temp_df["RPS"] = scenario_right_y_axis_temp_df["RPS"].rolling(window=10).mean()
+        scenario_right_y_axis_temp_df["RPS"] = scenario_right_y_axis_temp_df["RPS"].bfill()
+
+    # print(scenario_right_y_axis_temp_df)
+
     # Refresh the index
     scenario_right_y_axis_temp_df = scenario_right_y_axis_temp_df.reset_index(drop=True)
     scenario_right_y_axis_temp_df = scenario_right_y_axis_temp_df.applymap(str)
@@ -313,7 +320,6 @@ def get_scenario_metrics(scenario_name, gatling_log_df, right_y_axis_filter, per
     # Fill NaN values with zero
     scenario_metrics_df = scenario_metrics_df.fillna(0)
 
-    # print(scenario_metrics_df)
     # Return Two Dataframes
     return scenario_metrics_df, overall_transaction_percentile_df
 
@@ -793,7 +799,7 @@ def main(argv):
     gat_log_graph_df = generate_gatling_log_df(simulation_logs_list)
 
     # Generate Graph
-    right_y_axis_filter_list = ["RPM", "Users", "Errors"]
+    right_y_axis_filter_list = ["RPS", "Users", "Errors"]
 
     # Initialise an Empty Tab List
     tab_list = []
