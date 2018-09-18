@@ -9,7 +9,6 @@
 
 import getopt
 import logging
-import linecache
 import sys
 import time
 from pathlib import Path
@@ -48,11 +47,7 @@ def generate_gatling_log_df(simulation_logs_list):
     # Reset the index of the dataframe
     gat_log_df = gat_log_df.reset_index(drop=True)
 
-    # Fill NaN values with default value
-    gat_log_df = gat_log_df.fillna("0")
-
     # Get Dataframe for Graphs
-    # gat_log_graph_df = gat_log_df.loc[gat_log_df["Status"] != "KO"]
     gat_log_graph_df = gat_log_df[gat_log_df["Owner"] != "GROUP"]
     gat_log_graph_df = gat_log_graph_df[gat_log_graph_df["Owner"] != "RUN"]
 
@@ -259,6 +254,9 @@ def calculate_and_merge_transaction_percentiles(scenario_df, scenario_metrics_df
         # Clean the Dataframe from NaN values
         temp_df = temp_df.dropna(how='any')
 
+        # Round the Percentile Column
+        temp_df.TransactionName = temp_df.TransactionName.round(2)
+
         # Refresh the index
         temp_df = temp_df.reset_index(drop=True)
 
@@ -306,13 +304,16 @@ def get_scenario_metrics(scenario_name, gatling_log_df, right_y_axis_filter, per
     scenario_metrics_df['LocalTime'] = pd.to_datetime(scenario_metrics_df['LocalTime'], unit='ms')
     scenario_metrics_df = scenario_metrics_df.sort_values("LocalTime", ascending=True)
 
-    # Add the Steady State Users which are not filled
+    # Add the Steady State Users which are not filled -- This is for smoothing of graph.
     if right_y_axis_filter not in "Errors":
-        scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].ffill()
+        scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].astype(float)
+        scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].interpolate().round(3)
+        scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].astype(str)
 
     # Fill NaN values with zero
     scenario_metrics_df = scenario_metrics_df.fillna(0)
 
+    # print(scenario_metrics_df)
     # Return Two Dataframes
     return scenario_metrics_df, overall_transaction_percentile_df
 
