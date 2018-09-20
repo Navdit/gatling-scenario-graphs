@@ -637,6 +637,34 @@ def set_graph_and_legend_properties(plot_graph, legends, scenario):
 
 
 ########################################################################################################################
+# Function Name: sort_transaction_names_and_remove_localtime_col
+# Description  : Sorts the transactions names in Alphabetical order and removes Localtime Column
+# @param       : Right Y-Axis Filter
+# @param       : List of Column Names
+# @param       : Sort -- True, if you want to sort the column names. Else the Legend will have the order of
+#                transactions in which they were executed. Default value is True.
+# @return      : List of Column Names, in the order in which they will be plotted and shown on Legend
+########################################################################################################################
+def sort_transaction_names_and_remove_localtime_col(right_y_axis_filter: str, col_list: list, sort: bool = True) -> list:
+    if sort:
+        # Remove the right y axis filter
+        col_list.remove(right_y_axis_filter)
+        # Remove LocalTime
+        col_list.remove("LocalTime")
+        # Sort the List
+        col_list.sort()
+        # Insert Right Y axis Filter in the beginning so that its always on top in Legend
+        col_list.insert(0, right_y_axis_filter)
+    else:
+        # Remove LocalTime
+        col_list.remove("LocalTime")
+
+    return col_list
+
+########################################################################################################################
+
+
+########################################################################################################################
 # Function Name: plot_graph_by_transaction
 # Description  : Plots the graph of all the transactions in a given scenario
 # @param       : scenario_graph Figure
@@ -672,57 +700,61 @@ def plot_graph_by_transaction(scenario_metrics_df, overall_percentile_df, scenar
     # get all the legends in one list
     legend_list = []
 
+    # Sort the Transactions names in Alphabetical order
+    transaction_col_list = sort_transaction_names_and_remove_localtime_col(right_y_axis_filter,
+                                                                           list(scenario_metrics_df.columns))
+
     # Source of Graphs
     source = ColumnDataSource(scenario_metrics_df)
 
     # Plot graph transaction-wise
-    for col_name in scenario_metrics_df.columns:
+    for col_name in transaction_col_list:
         # Ignore Column LocalTime
-        if col_name not in "LocalTime":
-            if col_name in right_y_axis_filter:
-                # Get the legend name
-                legend_name = col_name
+        # if col_name not in "LocalTime":
+        if col_name in right_y_axis_filter:
+            # Get the legend name
+            legend_name = col_name
 
-                # Setting the second y axis range name and range
-                scenario_graph.extra_y_ranges = {col_name: Range1d(0, right_y_range)}
+            # Setting the second y axis range name and range
+            scenario_graph.extra_y_ranges = {col_name: Range1d(0, right_y_range)}
 
-                # Adding the second axis to the plot.
-                scenario_graph.add_layout(LinearAxis(y_range_name=col_name, axis_label=col_name), 'right')
+            # Adding the second axis to the plot.
+            scenario_graph.add_layout(LinearAxis(y_range_name=col_name, axis_label=col_name), 'right')
 
-                # PlotGraph
-                if col_name in "Errors":
-                    axis_color = "#d62728"
-                else:
-                    axis_color = "yellow"
-                plot_graph = scenario_graph.line('LocalTime',
-                                                 col_name,
-                                                 source=source,
-                                                 line_width=2,
-                                                 color=axis_color,
-                                                 y_range_name=col_name,
-                                                 name=col_name)
-
+            # PlotGraph
+            if col_name in "Errors":
+                axis_color = "#d62728"
             else:
-                # Transaction Percentile
-                col_percentile = int(overall_percentile_df.loc
-                                       [overall_percentile_df['Transaction'] == col_name, 'Percentile'].item())
+                axis_color = "yellow"
+            plot_graph = scenario_graph.line('LocalTime',
+                                             col_name,
+                                             source=source,
+                                             line_width=2,
+                                             color=axis_color,
+                                             y_range_name=col_name,
+                                             name=col_name)
 
-                # Get the legend name along with Transaction's Percentile
-                legend_name = col_name_dict[col_name] + " ({}th: {} ms)".format(percentile, col_percentile)
+        else:
+            # Transaction Percentile
+            col_percentile = int(overall_percentile_df.loc
+                                   [overall_percentile_df['Transaction'] == col_name, 'Percentile'].item())
 
-                # PlotGraph
-                plot_graph = scenario_graph.line('LocalTime',
-                                                 col_name,
-                                                 source=source,
-                                                 line_width=2,
-                                                 color=color_palette[color_index],
-                                                 name=col_name)
+            # Get the legend name along with Transaction's Percentile
+            legend_name = col_name_dict[col_name] + " ({}th: {} ms)".format(percentile, col_percentile)
 
-            # increment through color palette
-            color_index = color_index + 1
+            # PlotGraph
+            plot_graph = scenario_graph.line('LocalTime',
+                                             col_name,
+                                             source=source,
+                                             line_width=2,
+                                             color=color_palette[color_index],
+                                             name=col_name)
 
-            # Append the legend
-            legend_list.append((legend_name, [plot_graph]))
+        # increment through color palette
+        color_index = color_index + 1
+
+        # Append the legend
+        legend_list.append((legend_name, [plot_graph]))
 
     # Append the graph in list which will be passed to "Column"
     scenario_graph_final = set_graph_and_legend_properties(scenario_graph, legend_list, scenario)
