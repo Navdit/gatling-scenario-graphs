@@ -1,9 +1,7 @@
 # ============================================================================================================
 # Purpose:           Generates the Scenario Based Graphs using Gatling Simulation Log.
 # Author:            Navdit Sharma (Nav)
-# Notes:             Script reads its inputs from the given config File.
-#                    Parameters read from config file are:
-#                    1. Simulation Logs
+# Notes:             Run the script from command prompt.
 # Revision:          Last change: 05/09/18 by Nav :: Created and tested the script
 # ==============================================================================================================
 
