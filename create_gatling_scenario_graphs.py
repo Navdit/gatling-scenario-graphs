@@ -815,7 +815,6 @@ def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axi
         scenario_plots.append(complete_scenario_graph)
 
         print("{} Completed.".format(scenario_name))
-        logger.info("{} Completed.".format(scenario_name))
 
     # put all the plots in a Column
     layout = Column(children=scenario_plots)
@@ -852,7 +851,6 @@ def main(argv):
     # Looping through the right-y-axis Filters
     for right_y_axis_filter in right_y_axis_filter_list:
         print("-- {}th vs {} Graph Started --".format(percentile, right_y_axis_filter))
-        logger.info("-- {}th vs {} Graph Started --".format(percentile, right_y_axis_filter))
 
         # Get the graph
         graph_layout = generate_graph(gat_log_graph_df, output_graph, right_y_axis_filter, percentile)
@@ -864,7 +862,6 @@ def main(argv):
         tab_list.append(tab)
 
         print("-- {}th vs {} Graph Completed --".format(percentile, right_y_axis_filter))
-        logger.info("-- {}th vs {} Graph Completed --".format(percentile, right_y_axis_filter))
 
     # Get the Final HTML Page Ready
     tabs = Tabs(tabs=tab_list)
@@ -887,30 +884,10 @@ if __name__ == "__main__":
     # Start Time of Code
     start_time = time.time()
 
-    # Setting Logger
-    logsLocation = "GatlingScenarioGraphs.log"
-
-    logger = logging.getLogger("Gatling_Scenario_Graphs")
-    logger.setLevel(logging.INFO)
-
-    # create a file handler
-    handler = logging.FileHandler(logsLocation)
-    handler.setLevel(logging.INFO)
-
-    # create a logging format
-    formatter = logging.Formatter('%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-    handler.setFormatter(formatter)
-
-    # add the handlers to the logger
-    logger.addHandler(handler)
-
-    logger.info("Script Started")
-
     # Call the main function
     main(sys.argv[1:])
 
     # Print Time taken to execute script
-    logger.info("CUSTOM INFO : --- Script Execution Time: %s seconds ---" % (time.time() - start_time))
     print("CUSTOM INFO : --- Script Execution Time: %s seconds ---" % (time.time() - start_time))
 
 ##################################################################################################################
