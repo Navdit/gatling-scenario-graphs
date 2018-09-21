@@ -39,8 +39,8 @@ def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
 
     # Reading into Dataframe
     gat_log_df = pd.read_csv(simulation_logs_list[0], sep='\t', header=None, names=gat_log_col_names, dtype=str)
-    for index in range(len(simulation_logs_list)-1):
-        gat_log_df_1 = pd.read_csv(simulation_logs_list[index+1], sep='\t', header=None,
+    for index in range(len(simulation_logs_list) - 1):
+        gat_log_df_1 = pd.read_csv(simulation_logs_list[index + 1], sep='\t', header=None,
                                    names=gat_log_col_names, dtype=str)
         gat_log_df = gat_log_df.append(gat_log_df_1)
 
@@ -66,6 +66,7 @@ def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
     gat_log_graph_df = gat_log_graph_df.drop(["EndTime"], axis=1)
 
     return gat_log_graph_df
+
 
 ########################################################################################################################
 
@@ -134,13 +135,12 @@ def compute_right_y_axis(scenario_right_y_axis_df: pd.DataFrame, right_y_axis_fi
         scenario_right_y_axis_temp_df["RPS"] = scenario_right_y_axis_temp_df["RPS"].rolling(window=10).mean()
         scenario_right_y_axis_temp_df["RPS"] = scenario_right_y_axis_temp_df["RPS"].bfill()
 
-    # print(scenario_right_y_axis_temp_df)
-
     # Refresh the index
     scenario_right_y_axis_temp_df = scenario_right_y_axis_temp_df.reset_index(drop=True)
     scenario_right_y_axis_temp_df = scenario_right_y_axis_temp_df.applymap(str)
 
     return scenario_right_y_axis_temp_df
+
 
 ########################################################################################################################
 
@@ -196,6 +196,7 @@ def merge_right_y_axis_values_with_scenario_df(empty_scenario_metrics_df: pd.Dat
 
     return filled_scenario_metrics_df
 
+
 ########################################################################################################################
 
 
@@ -216,7 +217,7 @@ def calculate_and_merge_transaction_percentiles(scenario_df: pd.DataFrame,
                                                 scenario_metrics_df: pd.DataFrame,
                                                 percentile: int) -> (pd.DataFrame, pd.DataFrame):
     # Divide the percentile to get in the format, which will be given to Dataframe
-    percentile = percentile/100
+    percentile = percentile / 100
 
     # Transactions OK DF
     scenario_ok_df = scenario_df.loc[scenario_df["Status"] == "OK"]
@@ -278,6 +279,7 @@ def calculate_and_merge_transaction_percentiles(scenario_df: pd.DataFrame,
 
     return scenario_metrics_df, overall_transaction_percentile_df
 
+
 ########################################################################################################################
 
 
@@ -291,7 +293,7 @@ def calculate_and_merge_transaction_percentiles(scenario_df: pd.DataFrame,
 # @return      : Dataframe scenario_metrics_df with columns: [LocalTime, Errors, ${TransactionNames}]
 # @return      : Dataframe overall_transaction_percentile_df with columns: [Transaction, Percentile]
 # Author       : Navdit Sharma
-# Comments     : Created on 05/09/2018 
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
                          right_y_axis_filter: str, percentile: int) -> (pd.DataFrame, pd.DataFrame):
@@ -326,6 +328,7 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
     # Return Two Dataframes
     return scenario_metrics_df, overall_transaction_percentile_df
 
+
 ########################################################################################################################
 
 
@@ -333,12 +336,15 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
 # Function Name: check_path
 # Description  : Take the location of file/directory and check if it exists. Else throw the exception.
 # @param       : Path to be checked
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def check_path(input_path: Path):
     if input_path.exists() is False:
         sys.exit("File doesn't exist. Please check path {}".format(input_path))
     elif str(input_path) in ".":
         return False
+
 
 ########################################################################################################################
 
@@ -348,6 +354,8 @@ def check_path(input_path: Path):
 # Description  : Checks the path of the log files.
 # @param       : List of Log Paths
 # @return      : List of Simulations logs.
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def check_logs_path(input_logs_list: list) -> list:
     # Check if location of at least one Simulation Log has been provided.
@@ -372,6 +380,7 @@ def check_logs_path(input_logs_list: list) -> list:
 
     return simulation_logs_list
 
+
 ########################################################################################################################
 
 
@@ -380,9 +389,12 @@ def check_logs_path(input_logs_list: list) -> list:
 # Description  : Take a list of string objects and return the same list stripped of extra whitespace.
 # @param       : List which needs to be stripped of the extra white spaces
 # @return      : The same list, which was given as input but stripped of whitespaces
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def strip_list(list_input: list) -> list:
     return [x.strip() for x in list_input]
+
 
 ########################################################################################################################
 
@@ -393,6 +405,8 @@ def strip_list(list_input: list) -> list:
 # @param       : Arguments given by user
 # @return      : List of the Simulation Log Files
 # @return      : If given, path of the Graph, where the user wants to get generated
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def validate_user_given_arguments(argv):
     # Arguments
@@ -432,6 +446,7 @@ def validate_user_given_arguments(argv):
 
     return input_log, output_graph_path, input_percentile
 
+
 ########################################################################################################################
 
 
@@ -440,11 +455,14 @@ def validate_user_given_arguments(argv):
 # Description  : Gives the sorted list of the scenarios, which were run in the Gatling Test
 # @param       : Gatling Log Dataframe
 # @return      : Sorted List of Scenarios
+# Author       : Navdit Sharma
+# Comments     : Created on 20/09/2018
 ########################################################################################################################
 def get_list_of_scenarios(gatling_log_df: pd.DataFrame) -> list:
     sorted_scenario_list = gatling_log_df.Scenario.unique().tolist()
     sorted_scenario_list.sort()
     return sorted_scenario_list
+
 
 ########################################################################################################################
 
@@ -458,6 +476,8 @@ def get_list_of_scenarios(gatling_log_df: pd.DataFrame) -> list:
 #                will show the name without "$" sign.
 # @param       : Scenario Metrics Dataframe and Overall Percentile Dataframe.
 # @return      : Dictionary of Column Names
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def remove_dollar_sign_and_get_column_names_dict(scenario_metrics_df: pd.DataFrame,
                                                  overall_percentile_df: pd.DataFrame) -> dict:
@@ -468,8 +488,9 @@ def remove_dollar_sign_and_get_column_names_dict(scenario_metrics_df: pd.DataFra
         overall_percentile_df['Transaction'] = \
             overall_percentile_df['Transaction'].replace(column, new_col_name)
         col_name_dict[new_col_name] = column
-    
+
     return col_name_dict
+
 
 ########################################################################################################################
 
@@ -480,8 +501,10 @@ def remove_dollar_sign_and_get_column_names_dict(scenario_metrics_df: pd.DataFra
 # @param       : Scenario Metrics Dataframe
 # @param       : right_y_axis_filters_list - List of rigth y-Axis filters
 # @return      : Left and Right Y-Axis Range of Bokeh Graph
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
-def get_y_range_of_graph(scenario_metrics_df: pd.DataFrame, right_y_axis_filter:str) -> (int, int):
+def get_y_range_of_graph(scenario_metrics_df: pd.DataFrame, right_y_axis_filter: str) -> (int, int):
     tmp_max_val_df = scenario_metrics_df
     tmp_max_val_df = tmp_max_val_df.apply(pd.to_numeric)
 
@@ -498,6 +521,7 @@ def get_y_range_of_graph(scenario_metrics_df: pd.DataFrame, right_y_axis_filter:
 
     return left_y_axis_range, right_y_axis_range
 
+
 ########################################################################################################################
 
 
@@ -507,6 +531,8 @@ def get_y_range_of_graph(scenario_metrics_df: pd.DataFrame, right_y_axis_filter:
 # @param       : Scenario Metrics Dataframe
 # @param       : Scenario Name, for which the Color Palette has to be set
 # @return      : Color Palette
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def get_color_palette(scenario_metrics_df: pd.DataFrame, scenario: str) -> list:
     # Number of Lines to plot
@@ -527,6 +553,7 @@ def get_color_palette(scenario_metrics_df: pd.DataFrame, scenario: str) -> list:
 
     return color_palette
 
+
 ########################################################################################################################
 
 
@@ -534,6 +561,8 @@ def get_color_palette(scenario_metrics_df: pd.DataFrame, scenario: str) -> list:
 # Function Name: set_hover_tool_tips
 # Description  : Set the properties of the hover tool tips.
 # @return      : hover_tool_tips
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def set_hover_tool_tips() -> object:
     hover_tool_tips = HoverTool(
@@ -547,6 +576,7 @@ def set_hover_tool_tips() -> object:
     )
 
     return hover_tool_tips
+
 
 ########################################################################################################################
 
@@ -563,6 +593,8 @@ def set_hover_tool_tips() -> object:
 # @param       : toolbar_location - Location of Bokeh Toolbar
 # @param       : tools_to_show - Bokeh tools, which you would like to show on graph
 # @return      : figure
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def plot_new_graph(x_axis_label: str, x_axis_type: str, y_axis_label: str, plot_width: int, plot_height: int,
                    left_y_range: int, toolbar_location: str, tools_to_show: str) -> figure():
@@ -577,6 +609,7 @@ def plot_new_graph(x_axis_label: str, x_axis_type: str, y_axis_label: str, plot_
 
     return plot
 
+
 ########################################################################################################################
 
 
@@ -585,6 +618,8 @@ def plot_new_graph(x_axis_label: str, x_axis_type: str, y_axis_label: str, plot_
 # Description  : Sets the Properties of the graph and the legend of the graph
 # @param       : Graph and the legend it will be using, Scenario Name
 # @return      : Returns the plotted graph with the properties
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def set_graph_and_legend_properties(plot_graph: figure(), legends: list, scenario: str) -> figure():
     # Add Tool - Hovertool
@@ -646,6 +681,7 @@ def set_graph_and_legend_properties(plot_graph: figure(), legends: list, scenari
 
     return plot_graph
 
+
 ########################################################################################################################
 
 
@@ -657,6 +693,8 @@ def set_graph_and_legend_properties(plot_graph: figure(), legends: list, scenari
 # @param       : Sort -- True, if you want to sort the column names. Else the Legend will have the order of
 #                transactions in which they were executed. Default value is True.
 # @return      : List of Column Names, in the order in which they will be plotted and shown on Legend
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def sort_transaction_names_and_remove_localtime_col(right_y_axis_filter: str,
                                                     col_list: list, sort: bool = True) -> list:
@@ -675,6 +713,7 @@ def sort_transaction_names_and_remove_localtime_col(right_y_axis_filter: str,
 
     return col_list
 
+
 ########################################################################################################################
 
 
@@ -685,6 +724,8 @@ def sort_transaction_names_and_remove_localtime_col(right_y_axis_filter: str,
 # @param       : Right Y-Axis Filter
 # @param       : Percentile
 # @return      : Figure of Plotted graph along with Legend in Legend List
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def plot_graph_by_transaction(scenario_metrics_df: pd.DataFrame, overall_percentile_df: pd.DataFrame, scenario: str,
                               right_y_axis_filter: str, percentile: int) -> figure():
@@ -749,7 +790,7 @@ def plot_graph_by_transaction(scenario_metrics_df: pd.DataFrame, overall_percent
         else:
             # Transaction Percentile
             col_percentile = int(overall_percentile_df.loc
-                                   [overall_percentile_df['Transaction'] == col_name, 'Percentile'].item())
+                                 [overall_percentile_df['Transaction'] == col_name, 'Percentile'].item())
 
             # Get the legend name along with Transaction's Percentile
             legend_name = col_name_dict[col_name] + " ({}th: {} ms)".format(percentile, col_percentile)
@@ -773,6 +814,7 @@ def plot_graph_by_transaction(scenario_metrics_df: pd.DataFrame, overall_percent
 
     return scenario_graph_final
 
+
 ########################################################################################################################
 
 
@@ -784,6 +826,8 @@ def plot_graph_by_transaction(scenario_metrics_df: pd.DataFrame, overall_percent
 # @param       : right y-axis filter. Currently, they are limited to [Errors, Users, RPS, RPM]
 # @param       : Percentile, for which graph needs to be produced. Default Value is 95
 # @return      : Layout of the graph
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axis_filter: str,
                    percentile: int) -> object:
@@ -822,6 +866,7 @@ def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axi
     # Return the layout
     return layout
 
+
 ########################################################################################################################
 
 
@@ -830,9 +875,10 @@ def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axi
 # Description  : Calls the functions to consume Excel given by the user and update the scenarios
 # @param       : Null
 # @return      : Null
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ########################################################################################################################
 def main(argv):
-
     # Get the Log Files Location and Output Graph Location
     simulation_logs, output_graph, percentile = validate_user_given_arguments(argv)
 
@@ -866,10 +912,6 @@ def main(argv):
     # Get the Final HTML Page Ready
     tabs = Tabs(tabs=tab_list)
 
-    # DEBUG -- Show HTML Page once done
-    # TODO: Comment before deploying to prod
-    show(tabs)
-
 ##################################################################################################################
 
 
@@ -878,6 +920,8 @@ def main(argv):
 # Description  : Entry Point of the script
 # @param       : Null
 # @return      : Null
+# Author       : Navdit Sharma
+# Comments     : Created on 05/09/2018
 ##################################################################################################################
 if __name__ == "__main__":
     print("Script Started")
