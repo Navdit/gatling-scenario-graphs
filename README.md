@@ -51,3 +51,16 @@ If successful, you should see screen changes as follows:
 A sample graphs looks like [this](https://github.com/Navdit/gatling-scenario-graphs/blob/master/graphs/GatlingScenarioGraphs.html).
 
 Please find below the sample screenshots.
+
+** 95th vs RPS (Requests Per Second)**
+![95th vs RPS](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/rps_tab.PNG)
+
+** 95th vs Users**
+![95th vs Users](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/users_tab.PNG)
+
+** 95th vs Errors**
+![95th vs Users](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/errors_tab.PNG)
+
+#### Step 3: Exploring Graph
+Graph can be explored by using following tools:
+- Zoom in 
