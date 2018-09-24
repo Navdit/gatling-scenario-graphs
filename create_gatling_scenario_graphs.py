@@ -18,7 +18,7 @@ from bokeh.models import (ColumnDataSource, HoverTool, Legend, LinearAxis,
 from bokeh.models.formatters import DatetimeTickFormatter
 from bokeh.models.widgets import Panel, Tabs
 from bokeh.palettes import d3
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure, output_file, save
 
 
 ##################################################################################################################
@@ -909,6 +909,9 @@ def main(argv):
 
     # Get the Final HTML Page Ready
     tabs = Tabs(tabs=tab_list)
+
+    # Save HTML File
+    save(tab)
 
 ##################################################################################################################
 
