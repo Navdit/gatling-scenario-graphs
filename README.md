@@ -5,7 +5,9 @@ A simple python script, which will consume the Gatling Logs to give a html page,
 
 ### Table of contents
 - [Requirements](https://github.com/Navdit/gatling-scenario-graphs/blob/master/README.md#Requirements)
-[Quick Start Example](https://github.com/Navdit/gatling-scenario-graphs/blob/master/README.md#quick-start-example)
+- [Setup from Scratch](https://github.com/Navdit/gatling-scenario-graphs#setup-from-scratch)
+- [Quick Start](https://github.com/Navdit/gatling-scenario-graphs/blob/master/README.md#quick-start-example)
+  - [Step 1: Command to run script]()
     
 
 ## Requirements
@@ -27,9 +29,9 @@ If you are running for the first time or have no clue how to setup, then follow 
         pip install bokeh
     ```
 
-## Quick Start Example
+## Quick Start
 
-#### Step 1: In command prompt 
+#### Step 1: Command to run script
 
 ```
 python create_gatling_scenario_graphs.py -i <location of Gatling Log Files separated by ,> -o <output location of the Graph HTML Page> -p <percentile>
