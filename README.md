@@ -48,7 +48,7 @@ If successful, you should see screen changes as follows:
 ![Run Screen](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/run_snapshot.PNG)
 
 #### Step 2: Checking out Graph
-A sample graphs looks like [this](https://github.com/Navdit/gatling-scenario-graphs/blob/master/graphs/GatlingScenarioGraphs.html). Please find below the sample screenshots.
+A sample graphs looks like [this](https://github.com/Navdit/gatling-scenario-graphs/blob/master/graphs/GatlingScenarioGraphs.html). Please find below some sample screenshots.
 
 **95th vs RPS (Requests Per Second)**
 ![95th vs RPS](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/rps_tab.PNG)
