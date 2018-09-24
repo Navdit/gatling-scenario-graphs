@@ -25,8 +25,8 @@ If you are running for the first time or have no clue how to setup, then follow 
 
  - Setting up on Windows Machine:
     1. [Download latest release of Python.](https://www.python.org/downloads/windows/)
-    2. [Pip install Pandas.](https://stackoverflow.com/questions/42907331/how-to-install-pandas-from-pip-on-windows-cmd)
-    3. Pip install Bokeh using command:
+    2. [Install Pandas.](https://stackoverflow.com/questions/42907331/how-to-install-pandas-from-pip-on-windows-cmd)
+    3. Install Bokeh:
     ```
         pip install bokeh
     ```
