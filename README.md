@@ -70,13 +70,12 @@ Graph can be explored by using following tools:
 - Reset Graph ![reset](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/reset.PNG)
 - Save Graph as PNG ![save](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/save.PNG) 
 - Hover ![hover](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/hover.PNG)
-
 These tools can be found in the toolbar present under every plot. Toolbar looks like:
 ![toolbar](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/toolbar.PNG)
 
 - Select/Deselect Transactions from Legend, as shown below:
 ![select_deselect](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/select_deselect.PNG)
 
-- When Hover and Zoom are selected, a Graph would like as below:
+- When Hover and Zoom are selected, a Graph looks like:
 ![hover_zoom_selected](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/hover_zoom_selected.PNG)
 
