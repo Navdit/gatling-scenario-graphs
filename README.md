@@ -70,6 +70,7 @@ Graph can be explored by using following tools:
 - Reset Graph ![reset](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/reset.PNG)
 - Save Graph as PNG ![save](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/save.PNG) 
 - Hover ![hover](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/hover.PNG)
+
 These tools can be found in the toolbar present under every plot. Toolbar looks like:
 ![toolbar](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/toolbar.PNG)
 
