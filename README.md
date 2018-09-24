@@ -28,7 +28,8 @@ If you are running for the first time or have no clue how to setup, then follow 
     ```
 
 ## Quick Start Example
-In command prompt 
+
+#### Step 1: In command prompt 
 
 ```
 python create_gatling_scenario_graphs.py -i <location of Gatling Log Files separated by ,> -o <output location of the Graph HTML Page> -p <percentile>
@@ -37,5 +38,16 @@ Eg:
 ``` DOS 
 python create_gatling_scenario_graphs.py -i C:\Logs\simulation_log1.log,C:\Logs\simulation_log2.log -o C:\Graphs\LoadTest_run1.html -p 99
 ```
+**Arguments o and p are optional. Default value of:**
+- **o is same folder as that of script.**
+- **p is 95 percentile**
 
 **Note: Log Files, should be given without any spaces**
+
+If successful, you should see screen changes as follows:
+![Run Screen](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/run_snapshot.PNG)
+
+#### Step 2: Checking out Graph
+A sample graphs looks like [this](https://github.com/Navdit/gatling-scenario-graphs/blob/master/graphs/GatlingScenarioGraphs.html).
+
+Please find below the sample screenshots.
