@@ -7,7 +7,9 @@ A simple python script, which will consume the Gatling Logs to give a html page,
 - [Requirements](https://github.com/Navdit/gatling-scenario-graphs/blob/master/README.md#Requirements)
 - [Setup from Scratch](https://github.com/Navdit/gatling-scenario-graphs#setup-from-scratch)
 - [Quick Start](https://github.com/Navdit/gatling-scenario-graphs/blob/master/README.md#quick-start-example)
-  - [Step 1: Command to run script]()
+  - [Command to run script](https://github.com/Navdit/gatling-scenario-graphs#step-1-command-to-run-script)
+  - [Checking out Graph](https://github.com/Navdit/gatling-scenario-graphs#step-2-checking-out-graph)
+  - [Exploring Graph](https://github.com/Navdit/gatling-scenario-graphs#step-3-exploring-graph)
     
 
 ## Requirements
