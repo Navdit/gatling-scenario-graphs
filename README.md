@@ -52,15 +52,26 @@ A sample graphs looks like [this](https://github.com/Navdit/gatling-scenario-gra
 
 Please find below the sample screenshots.
 
-** 95th vs RPS (Requests Per Second)**
+**95th vs RPS (Requests Per Second)**
 ![95th vs RPS](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/rps_tab.PNG)
 
-** 95th vs Users**
+**95th vs Users**
 ![95th vs Users](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/users_tab.PNG)
 
-** 95th vs Errors**
+**95th vs Errors**
 ![95th vs Users](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/errors_tab.PNG)
 
 #### Step 3: Exploring Graph
+
 Graph can be explored by using following tools:
-- Zoom in 
+- Zoom in ![zoom](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/zoom.PNG)
+- Reset Graph ![reset](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/reset.PNG)
+- Save Graph as PNG ![save](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/save.PNG) 
+- Hover ![hover](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/hover.PNG)
+
+These tools can be found in the toolbar present under every plot. Toolbar looks like:
+![toolbar](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/toolbar.PNG)
+
+When Hover and Zoom are selected, a Graph would like as below:
+![hover_zoom_selected](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/hover_zoom_selected.PNG)
+
