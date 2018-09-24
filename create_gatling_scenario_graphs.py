@@ -910,8 +910,8 @@ def main(argv):
     # Get the Final HTML Page Ready
     tabs = Tabs(tabs=tab_list)
 
-    # Save HTML File
-    save(tab)
+    # Save/Show HTML File
+    save(tabs)
 
 ##################################################################################################################
 
