@@ -1,0 +1,10 @@
+Transaction,Percentile
+GET_Token_wCredentials,691.8499999999999
+IDM_POST_RefreshToken,426.54999999999995
+IDM_POST_Totp,512.0
+IDM_POST_TotpStatus,416.0
+IDM_POST_ResetPassword,848.0
+IDM_POST_ContactOptions,514.0
+IDM_POST_Oxitoken,262.9
+IDM_POST_ChangePassword,601.0
+IDM_POST_CheckUsername,370.0

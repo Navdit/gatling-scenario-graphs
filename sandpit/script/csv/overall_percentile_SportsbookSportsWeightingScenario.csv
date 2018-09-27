@@ -1,0 +1,10 @@
+Transaction,Percentile
+SBS_GET_NavHierarchy,395.55
+SBS_GET_Competitions_$CompetitionID_Events_Outrights,364.70000000000005
+SBS_GET_UpComingEvents,278.5
+SBS_GET_Competitions_$GET_Competitions_$CompetitionID,485.75
+SBS_GET_Competitions_$CompetitionId_Events,437.74999999999994
+SBS_GET_Competitions_Events,267.4
+SBS_GET_Competitions_$CompetitionId_Outrights,259.15
+SBS_GET_Events_$EventId_SportCard,265.0
+SBS_GET_Events_$EventId_MarketGroupings_$MarketGrouping_Markets,233.0
