@@ -6,7 +6,7 @@
 # ==============================================================================================================
 
 import getopt
-import logging
+import os
 import sys
 import time
 from pathlib import Path
@@ -18,7 +18,19 @@ from bokeh.models import (ColumnDataSource, HoverTool, Legend, LinearAxis,
 from bokeh.models.formatters import DatetimeTickFormatter
 from bokeh.models.widgets import Panel, Tabs
 from bokeh.palettes import d3
-from bokeh.plotting import figure, output_file, save
+from bokeh.plotting import figure, output_file, show
+
+
+##################################################################################################################
+# Function Name: check_folder
+# Description  : Checks if the given folder exists, if not then creates a new one
+# @param       : Folder Location along with Folder Name.
+##################################################################################################################
+def check_folder(folder_loc:str):
+    if not os.path.exists(folder_loc):
+        os.makedirs(folder_loc)
+
+##################################################################################################################
 
 
 ##################################################################################################################
@@ -55,6 +67,7 @@ def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
     # Calculate Response Time
     gat_log_graph_df["ResponseTime"] = gat_log_graph_df.EndTime - gat_log_graph_df.StartTime
     gat_log_graph_df[['StartTime', 'EndTime']] = gat_log_graph_df[['StartTime', 'EndTime']].apply(pd.to_numeric)
+    # TODO : Add support for Timezone
     gat_log_graph_df['LocalTime'] = gat_log_graph_df['StartTime'] + (10 * 60 * 60 * 1000)
 
     # Drop Unnecessary Columns
@@ -64,7 +77,6 @@ def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
     gat_log_graph_df = gat_log_graph_df.drop(["EndTime"], axis=1)
 
     return gat_log_graph_df
-
 
 ########################################################################################################################
 
@@ -310,8 +322,7 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
     scenario_metrics_df, overall_transaction_percentile_df = calculate_and_merge_transaction_percentiles(
         scenario_temp_df, scenario_metrics_df, percentile)
 
-    # Changing LocalTime to DateTime and sort the Time in Ascending order
-    scenario_metrics_df['LocalTime'] = pd.to_datetime(scenario_metrics_df['LocalTime'], unit='ms')
+    # Sort the Time in Ascending order
     scenario_metrics_df = scenario_metrics_df.sort_values("LocalTime", ascending=True)
 
     # Add the Steady State Users which are not filled -- This is for smoothing of graph.
@@ -322,6 +333,11 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
 
     # Fill NaN values with zero
     scenario_metrics_df = scenario_metrics_df.fillna(0)
+
+    # Write df to csv
+    check_folder("csv")
+    scenario_metrics_df.to_csv("csv\{}_{}.csv".format(right_y_axis_filter, scenario_name), index=False)
+    overall_transaction_percentile_df.to_csv(("csv\overall_percentile_{}.csv".format(scenario_name)), index=False)
 
     # Return Two Dataframes
     return scenario_metrics_df, overall_transaction_percentile_df
@@ -727,6 +743,13 @@ def sort_transaction_names_and_remove_localtime_col(right_y_axis_filter: str,
 ########################################################################################################################
 def plot_graph_by_transaction(scenario_metrics_df: pd.DataFrame, overall_percentile_df: pd.DataFrame, scenario: str,
                               right_y_axis_filter: str, percentile: int) -> figure():
+    # Get Dataframes from csv
+    scenario_metrics_df = pd.read_csv("csv\{}_{}.csv".format(right_y_axis_filter, scenario), date_parser=True)
+    overall_percentile_df = pd.read_csv("csv\overall_percentile_{}.csv".format(scenario), date_parser=True)
+
+    # Changing LocalTime to DateTime
+    scenario_metrics_df['LocalTime'] = pd.to_datetime(scenario_metrics_df['LocalTime'], unit='ms')
+
     # Remove $ from the names of column names of scenario_metrics_df and
     # Rename the Transactions of overall_percentile_df
     col_name_dict = remove_dollar_sign_and_get_column_names_dict(scenario_metrics_df, overall_percentile_df)
@@ -911,7 +934,7 @@ def main(argv):
     tabs = Tabs(tabs=tab_list)
 
     # Save/Show HTML File
-    save(tabs)
+    show(tabs)
 
 ##################################################################################################################
 
