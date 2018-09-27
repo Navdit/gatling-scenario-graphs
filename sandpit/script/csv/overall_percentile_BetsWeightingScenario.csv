@@ -1,0 +1,9 @@
+Transaction,Percentile
+GET_Token_wCredentials,1028.8
+SBR_GET_Events_$EventID_Racecard,236.8
+BET_PUT_Combinations_Racing,961.6499999999999
+SBS_GET_Events_$EventId_SportCard,600.8499999999998
+BET_POST_Bets_Win_Racing,1180.7999999999997
+SBS_GET_Events_$EventId_MarketGroupings_$MarketGrouping_Markets,399.6
+BET_POST_Bets_Win_Sport,802.9999999999999
+BET_POST_Bets_Quinella,593.75
