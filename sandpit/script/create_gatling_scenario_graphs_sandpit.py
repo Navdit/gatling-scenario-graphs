@@ -339,10 +339,6 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
     scenario_metrics_df.to_csv("csv\{}_{}.csv".format(right_y_axis_filter, scenario_name), index=False)
     overall_transaction_percentile_df.to_csv(("csv\overall_percentile_{}.csv".format(scenario_name)), index=False)
 
-    # Return Two Dataframes
-    return scenario_metrics_df, overall_transaction_percentile_df
-
-
 ########################################################################################################################
 
 
@@ -741,8 +737,8 @@ def sort_transaction_names_and_remove_localtime_col(right_y_axis_filter: str,
 # Author       : Navdit Sharma
 # Comments     : Created on 05/09/2018
 ########################################################################################################################
-def plot_graph_by_transaction(scenario_metrics_df: pd.DataFrame, overall_percentile_df: pd.DataFrame, scenario: str,
-                              right_y_axis_filter: str, percentile: int) -> figure():
+def plot_graph_by_scenarios_vs_right_y_axis(scenario: str,
+                                            right_y_axis_filter: str, percentile: int) -> figure():
     # Get Dataframes from csv
     scenario_metrics_df = pd.read_csv("csv\{}_{}.csv".format(right_y_axis_filter, scenario), date_parser=True)
     overall_percentile_df = pd.read_csv("csv\overall_percentile_{}.csv".format(scenario), date_parser=True)
@@ -867,14 +863,11 @@ def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axi
         scenario_name = scenario_list[scnIndex]
 
         # Get scenario_metrics_df and overall_percentile_df
-        (scenario_metrics_df, overall_percentile_df) = get_scenario_metrics(scenario_name,
-                                                                            gat_log_df,
-                                                                            right_y_axis_filter,
-                                                                            percentile)
+        get_scenario_metrics(scenario_name, gat_log_df, right_y_axis_filter, percentile)
 
         # Plot Graphs of the Transactions in Scenario
-        complete_scenario_graph = plot_graph_by_transaction(scenario_metrics_df, overall_percentile_df,
-                                                            scenario_name, right_y_axis_filter, percentile)
+        complete_scenario_graph = plot_graph_by_scenarios_vs_right_y_axis(scenario_name, right_y_axis_filter,
+                                                                          percentile)
 
         # Add the Scenario Graphs to the Final Combined Graph
         scenario_plots.append(complete_scenario_graph)

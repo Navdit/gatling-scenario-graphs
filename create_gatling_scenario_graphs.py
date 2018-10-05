@@ -70,7 +70,7 @@ def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
 
 
 ########################################################################################################################
-# Function Name: merge_right_y_axis_values_with_scenario_df
+# Function Name: compute_right_y_axis
 # Description  : Computes the  values of right y-axis in the given scenario df based on given right_y_axis_filter
 # @param       : Dataframe - which has values for that filter. Columns are:
 #                [Owner,Scenario, Transaction_Name, Status, ResponseTime, LocalTime]
