@@ -194,7 +194,6 @@ def merge_right_y_axis_values_with_scenario_df(empty_scenario_metrics_df: pd.Dat
 
     return filled_scenario_metrics_df
 
-
 ########################################################################################################################
 
 
@@ -318,6 +317,7 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
     if right_y_axis_filter not in "Errors":
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].astype(float)
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].interpolate().round(3)
+        scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].bfill()
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].astype(str)
 
     # Fill NaN values with zero
@@ -882,9 +882,11 @@ def main(argv):
 
     # Check if Log Files Exist
     simulation_logs_list = check_logs_path(simulation_logs)
+    print("-- Gatling Log Files are valid --")
 
     # Generate Combined Gatling Log Dataframe
     gat_log_graph_df = generate_gatling_log_df(simulation_logs_list)
+    print("-- Gatling Log Files processed successfully --")
 
     # Generate Graph
     right_y_axis_filter_list = ["RPS", "Users", "Errors"]
