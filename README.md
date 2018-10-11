@@ -45,10 +45,10 @@ python create_gatling_scenario_graphs.py -i C:\Logs\simulation_log1.log,C:\Logs\
 **Arguments o, p and t are optional. Default value of:**
 - **o is same folder as that of script.**
 - **p is 95 percentile**
-- **t is O - means it will take the same time as in Gatling Logs**
+- **t is 'O' (zero) - means it will take the same time as in Gatling Logs**
 
 **More on Timezone Argument**
-Eg: If your timezoze is UTC(GMT) + 10.5, then 't' will be 10.5
+Eg: If your timezone is UTC(GMT) + 10.5, then 't' will be 10.5
 
 **Note: Log Files, should be given without any spaces**
 
