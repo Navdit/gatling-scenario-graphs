@@ -36,15 +36,19 @@ If you are running for the first time or have no clue how to setup, then follow 
 #### Step 1: Command to run script
 
 ```
-python create_gatling_scenario_graphs.py -i <location of Gatling Log Files separated by ,> -o <output location of the Graph HTML Page> -p <percentile>
+python create_gatling_scenario_graphs.py -i <location of Gatling Log Files separated by ,> -o <output location of the Graph HTML Page> -p <percentile> -t <timezone +/- hrs>
 ```
 Eg:
 ``` DOS 
-python create_gatling_scenario_graphs.py -i C:\Logs\simulation_log1.log,C:\Logs\simulation_log2.log -o C:\Graphs\LoadTest_run1.html -p 99
+python create_gatling_scenario_graphs.py -i C:\Logs\simulation_log1.log,C:\Logs\simulation_log2.log -o C:\Graphs\LoadTest_run1.html -p 99 -t 10.5
 ```
-**Arguments o and p are optional. Default value of:**
+**Arguments o, p and t are optional. Default value of:**
 - **o is same folder as that of script.**
 - **p is 95 percentile**
+- **t is O - means it will take the same time as in Gatling Logs**
+
+**More on Timezone Argument**
+Eg: If your timezoze is UTC(GMT) + 10.5, then 't' will be 10.5
 
 **Note: Log Files, should be given without any spaces**
 
