@@ -52,7 +52,7 @@ Eg: If your timezone is UTC(GMT) + 10.5, then 't' will be 10.5
 
 **Note: Log Files, should be given without any spaces**
 
-If successful, you should see screen changes as follows:
+If successful, you should see something like below:
 ![Run Screen](https://github.com/Navdit/gatling-scenario-graphs/blob/master/images/run_snapshot.PNG)
 
 #### Step 2: Checking out Graph
