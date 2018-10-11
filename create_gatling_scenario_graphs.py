@@ -24,13 +24,14 @@ from bokeh.plotting import figure, output_file, save
 ##################################################################################################################
 # Function Name: Generate_Gatling_Log_Df
 # Description  : Consumes the Gatling Logs and Return a clean Dataframe which can be used by other functions
-# @param       : List of Simulation Logs 
+# @param       : List of Simulation Logs
+# @param       : Float format of Time Difference
 # @return      : Dataframe gat_log_graph_df with columns: [Owner,Scenario,Transaction_Name,Status,ResponseTime,
 #                LocalTime]
 # Author       : Navdit Sharma
 # Comments     : Created on 05/09/2018 
 ##################################################################################################################
-def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
+def generate_gatling_log_df(simulation_logs_list: list, time_diff: float) -> pd.DataFrame:
     # Column Names
     gat_log_col_names = ["Owner", "Scenario", "ThreadId", "JunkCol1",
                          "Transaction_Name", "StartTime", "EndTime", "Status"]
@@ -55,7 +56,7 @@ def generate_gatling_log_df(simulation_logs_list: list) -> pd.DataFrame:
     # Calculate Response Time
     gat_log_graph_df["ResponseTime"] = gat_log_graph_df.EndTime - gat_log_graph_df.StartTime
     gat_log_graph_df[['StartTime', 'EndTime']] = gat_log_graph_df[['StartTime', 'EndTime']].apply(pd.to_numeric)
-    gat_log_graph_df['LocalTime'] = gat_log_graph_df['StartTime'] + (10 * 60 * 60 * 1000)
+    gat_log_graph_df['LocalTime'] = gat_log_graph_df['StartTime'] + (time_diff * 60 * 60 * 1000)
 
     # Drop Unnecessary Columns
     gat_log_graph_df = gat_log_graph_df.drop(["JunkCol1"], axis=1)
@@ -97,7 +98,7 @@ def compute_right_y_axis(scenario_right_y_axis_df: pd.DataFrame, right_y_axis_fi
         # Just get Divisor to know how many loops to go through
         loop_count = (end_time - begin_time) // granularity
 
-        for i in range(loop_count):
+        for i in range(int(loop_count)):
             end_time = begin_time + granularity
             tmp_df = scenario_right_y_axis_df[
                 (scenario_right_y_axis_df["LocalTime"] >= begin_time) &
@@ -138,7 +139,6 @@ def compute_right_y_axis(scenario_right_y_axis_df: pd.DataFrame, right_y_axis_fi
     scenario_right_y_axis_temp_df = scenario_right_y_axis_temp_df.applymap(str)
 
     return scenario_right_y_axis_temp_df
-
 
 ########################################################################################################################
 
@@ -246,7 +246,7 @@ def calculate_and_merge_transaction_percentiles(scenario_df: pd.DataFrame,
         # Just get Divisor
         loop_count = (end_time - begin_time) // 1000
 
-        for i in range(loop_count):
+        for i in range(int(loop_count)):
             end_time = begin_time + 1000
             tmp_df = transaction_df[
                 (transaction_df["LocalTime"] >= begin_time) & (transaction_df["LocalTime"] <= end_time)]
@@ -275,7 +275,6 @@ def calculate_and_merge_transaction_percentiles(scenario_df: pd.DataFrame,
         scenario_metrics_df = scenario_metrics_df.merge(temp_df, on='LocalTime', how='outer')
 
     return scenario_metrics_df, overall_transaction_percentile_df
-
 
 ########################################################################################################################
 
@@ -318,6 +317,9 @@ def get_scenario_metrics(scenario_name: str, gatling_log_df: pd.DataFrame,
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].astype(float)
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].interpolate().round(3)
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].bfill()
+        # Fill NaN values with zero in case all the values are NaN
+        scenario_metrics_df = scenario_metrics_df.fillna(0)
+        # Convert the column to String
         scenario_metrics_df[right_y_axis_filter] = scenario_metrics_df[right_y_axis_filter].astype(str)
 
     # Fill NaN values with zero
@@ -413,15 +415,17 @@ def validate_user_given_arguments(argv):
     output_graph_path = 'GatlingScenarioGraphs.html'
     input_log = ""
     input_percentile = 95
+    input_time_diff = 0
 
     # print('ARGV      : {}'.format(sys.argv[1:]))
 
-    options, remainder = getopt.getopt(sys.argv[1:], 'i:p:o:v', ['input=',
-                                                                 'output=',
-                                                                 'percentile='
-                                                                 'verbose',
-                                                                 'version=',
-                                                                 ])
+    options, remainder = getopt.getopt(sys.argv[1:], 'i:p:o:t:v', ['input=',
+                                                                   'percentile=',
+                                                                   'output=',
+                                                                   'timezone=',
+                                                                   'verbose',
+                                                                   'version=',
+                                                                   ])
     # print('OPTIONS   : {}'.format(options))
 
     for opt, arg in options:
@@ -435,6 +439,8 @@ def validate_user_given_arguments(argv):
             verbose = True
         elif opt == '--version':
             version = arg
+        elif opt in ('-t', '--timezone'):
+            input_time_diff = arg
 
     # print('VERSION   : {}'.format(version))
     # print('VERBOSE   : {}'.format(verbose))
@@ -442,7 +448,7 @@ def validate_user_given_arguments(argv):
     # print('LOG FILES : {}'.format(input_log))
     # print('REMAINING : {}'.format(remainder))
 
-    return input_log, output_graph_path, input_percentile
+    return input_log, output_graph_path, int(input_percentile), float(input_time_diff)
 
 
 ########################################################################################################################
@@ -842,13 +848,13 @@ def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axi
     for scnIndex in range(len(scenario_list)):
         # Get the scenario Name
         scenario_name = scenario_list[scnIndex]
+        print("{} in progress...".format(scenario_name))
 
         # Get scenario_metrics_df and overall_percentile_df
         (scenario_metrics_df, overall_percentile_df) = get_scenario_metrics(scenario_name,
                                                                             gat_log_df,
                                                                             right_y_axis_filter,
                                                                             percentile)
-
         # Plot Graphs of the Transactions in Scenario
         complete_scenario_graph = plot_graph_by_transaction(scenario_metrics_df, overall_percentile_df,
                                                             scenario_name, right_y_axis_filter, percentile)
@@ -878,15 +884,16 @@ def generate_graph(gat_log_df: pd.DataFrame, graph_output_path: str, right_y_axi
 ########################################################################################################################
 def main(argv):
     # Get the Log Files Location and Output Graph Location
-    simulation_logs, output_graph, percentile = validate_user_given_arguments(argv)
+    simulation_logs, output_graph, percentile, time_diff = validate_user_given_arguments(argv)
 
     # Check if Log Files Exist
     simulation_logs_list = check_logs_path(simulation_logs)
-    print("-- Gatling Log Files are valid --")
+    print("Gatling Log Files validated successfully...")
 
     # Generate Combined Gatling Log Dataframe
-    gat_log_graph_df = generate_gatling_log_df(simulation_logs_list)
-    print("-- Gatling Log Files processed successfully --")
+    print("Processing Gatling Log Files...")
+    gat_log_graph_df = generate_gatling_log_df(simulation_logs_list, time_diff)
+    print("Gatling Log Files processed successfully...")
 
     # Generate Graph
     right_y_axis_filter_list = ["RPS", "Users", "Errors"]
@@ -927,7 +934,7 @@ def main(argv):
 # Comments     : Created on 05/09/2018
 ##################################################################################################################
 if __name__ == "__main__":
-    print("Script Started")
+    print("Script Started...")
     # Start Time of Code
     start_time = time.time()
 
